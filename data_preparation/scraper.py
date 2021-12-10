@@ -20,6 +20,7 @@ def get_links(category:str, limit:int) -> list:
 
     return links
 
+
 def get_text(links: list) -> dict:
 
     dict_text = {}
@@ -50,7 +51,7 @@ articles = {'sciencetech': r'C:\Users\zamec\Datamining2-project\data\sciencetech
 def main():
 
     for cat, folder in articles.items():
-        links = get_links(cat,40)
+        links = get_links(cat,100)
         texts = get_text(links)
         np.save(folder, texts) 
         print('Articles for %s category saved' % (cat))

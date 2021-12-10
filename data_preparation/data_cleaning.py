@@ -1,5 +1,6 @@
 from scraper import *
 
-folders = articles.values()
+folders = list(articles.values())
 
-read_clanky = np.load('clanky_zemavek.npy',allow_pickle='TRUE').item()
+read_clanky = np.load(folders[0],allow_pickle='TRUE').item()
+print(read_clanky)

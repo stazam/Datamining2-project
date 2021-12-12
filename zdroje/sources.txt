@@ -1,3 +1,0 @@
-#Newspaper3k
-https://towardsdatascience.com/the-easy-way-to-web-scrape-articles-online-d28947fc5979
-https://newspaper.readthedocs.io/en/latest/

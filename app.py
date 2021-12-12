@@ -50,11 +50,40 @@ st.sidebar.markdown("")
 #multiselect choice of graphs
 graphs = st.sidebar.multiselect('Which graphs would you like to dispaly',options = ['WordCloud','Barchart'], default=None)        
 
+if 'WordCloud' in graphs:
+    init_val_wc = round(len(text.split()) /2 )
+    max_val_wc = len(text.split())
+    num_words_cloud = st.sidebar.select_slider( 'Number of dispalyed words in word cloud', options=list(range(max_val_wc)), value = init_val_wc)
+
+if 'Barchart' in graphs:
+    df_bar = text_count(text)
+
+    max_val_bar = df_bar.shape[0]
+    init_val_bar = round(max_val_bar / 2)
+    num_words_bar = st.sidebar.select_slider( 'Number of dispalyed words in barchart', options=list(range(max_val_bar)), value = init_val_bar)
+
+
+st.sidebar.markdown("")
+st.sidebar.markdown("")
+my_model = st.sidebar.checkbox('Train your own model', value=False) 
+if my_model:
+    file_input = st.sidebar.file_uploader("Add text files for training NN", type = ['.txt'],accept_multiple_files=True) 
+    num_epochs = st.sidebar.select_slider( 'Number of epochs to train NN', options=list(range(100)), value = 3)
+
+    if len(file_input) == 3: 
+        train_new_model(file_input, num_epochs)
+        
+
 
 if len(text) != 0:
 
-    savedModel =  create_model()
-    sentence = predict_preparation([text])
+    if my_model:
+        savedModel =  load_my_model(which_model='own')
+        sentence = predict_preparation([text], own = True)
+    else:
+        savedModel =  load_my_model(which_model='pretrained')
+        sentence = predict_preparation([text])
+
     prediction = savedModel.predict(sentence)
 
     colors = ['#00cc96','#636efa','#ef553b']
@@ -79,19 +108,16 @@ if len(text) != 0:
 
 
     if 'Barchart' in graphs:
-        col1,col2,col3 = st.columns([0.05,1,0.2])
+        st.markdown("""<hr style="height:0.5px;width:1050px;border:none;color:#D2D2D2;background-color:#D2D2D2;margin-top:0px; margin-bottom:0px" /> """, unsafe_allow_html=True)
+
+        col1,col2,col3 = st.columns([0.05,1,0.3])
         with col1:
             st.markdown('')
 
         with col2:    
-            st.markdown("<h2 style='text-align: center; color: #333F4F;'>Frekvencia výskytu slov v texte</h2>", unsafe_allow_html=True)
-            df = text_count(text)
-
-            max_val = df.shape[0]
-            init_val = round(max_val / 2)
+            st.markdown("<h2 style='text-align: center; color: #333F4F; margin-left:200px'>Barchart</h2>", unsafe_allow_html=True)
             
-            num_words_bar = st.sidebar.select_slider( 'Number of dispalyed words in barchart', options=list(range(max_val)), value = init_val)
-            fig = px.bar(df.head(num_words_bar),x = 'word',y="count", color="word", title="Long-Form Input") 
+            fig = px.bar(df_bar.head(num_words_bar),x = 'word',y="count", color="word", title="Long-Form Input") 
             fig.update_layout(
                 autosize=False,
                 width=1000,
@@ -105,52 +131,31 @@ if len(text) != 0:
         
         with col3:
             st.markdown('')
-
-
+        
     if 'WordCloud' in graphs:
+        st.markdown("""<hr style="height:0.5px;width:1050px;border:none;color:#D2D2D2;background-color:#D2D2D2;margin-top:0px; margin-bottom:0px" /> """, unsafe_allow_html=True)
 
-        col1,col2,col3 = st.columns([0.1,1,0.2])
+        col1,col2,col3 = st.columns([0.25,1,0.2])
         with col1:
             st.markdown('')
 
         with col2:
-            st.markdown("<h2 style='text-align: center; color: #333F4F;'>Wordcloud pre zadaný text</h2>", unsafe_allow_html=True)  
-    
-            init_val = round(len(text.split()) /2 )
-            max_val = len(text.split())
-            num_words_cloud = st.sidebar.select_slider( 'Number of dispalyed words in word cloud', options=list(range(max_val)), value = init_val)
-
+            st.markdown("<h2 style='text-align: center; color: #333F4F;'>Wordcloud</h2>", unsafe_allow_html=True) 
+            st.markdown('')
+            st.markdown('')
+            st.markdown('')
+            st.markdown('') 
+            
             wordcloud = WordCloud(max_words=num_words_cloud , background_color="white", width = 600, height= 300).generate(text)
             fig, ax = plt.subplots(figsize=(8, 7))
             plt.imshow(wordcloud)
             plt.axis("off")
             st.pyplot(fig)
 
-            # fig = plt.subplots(figsize=(10, 8))
-            # plt.plot(wordcloud)
-            # plt.axis("off")
-            # plt.tight_layout(pad=0)
-            # st.pyplot(fig)
-
-        
         with col3:
             st.markdown('')
 
-
-st.sidebar.markdown("")
-st.sidebar.markdown("")
-my_model = st.sidebar.checkbox('Train your own model', value=False) 
-if stats:
-    file_input = st.sidebar.file_uploader("Add text files for training NN", type = ['.txt']) 
-    num_epochs = st.sidebar.select_slider( 'Number of epochs to train NN', options=list(range(100)), value = 5)
-
-    if not file_input is None:
-        
-        for file in file_input:
-            
-            stringio = StringIO(file.getvalue().decode("utf-8"))
-            data = stringio.read().strip().rstrip()
-
+    
 
     #     savedModel =  create_model(update = True)
 

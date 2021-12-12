@@ -1,8 +1,11 @@
 from data_preparation.scraper import *
 from data_preparation.scraper import *
 import pickle
+import tensorflow as tf
+from io import StringIO
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
+from sklearn.model_selection import train_test_split
 
 max_length = 10000
 trunc_type='post'
@@ -49,3 +52,36 @@ def predict_preparation(text:list, own:bool = False):
 
   sequences = tokenizer.texts_to_sequences(text)
   return pad_sequences(sequences, maxlen=max_length, padding=padding_type, truncating=trunc_type)
+
+
+def preprocess_input_to_model(file_input, num_epochs = 5):
+
+    labels = []
+    data = []
+    for i,file in enumerate(file_input):
+        stringio = StringIO(file.getvalue().decode("utf-8"))
+        
+        text = []
+        length = 1
+        while length > 0:
+            line = stringio.readline()
+            if len(line) > 0:
+                text.append(line)
+            length = len(line)
+
+        text = dict([(x.split(':')[0],[x.split(':')[1]]) for x in text])
+        data_temp = preprocess_articles(text)    
+        data = data + data_temp 
+        labels = labels + [i] * len(data_temp)
+
+    num_class = len(set(labels))
+    X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.33, random_state=42)
+
+    create_tokenizer(X_train)    
+    X_train_padded = predict_preparation(X_train, own = True)
+    X_test_padded = predict_preparation(X_test, own = True)
+
+    y_train = tf.keras.utils.to_categorical(y_train, num_classes=num_class)
+    y_test = tf.keras.utils.to_categorical(y_test, num_classes=num_class)
+
+    return X_train_padded, X_test_padded, y_train, y_test

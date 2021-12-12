@@ -9,12 +9,10 @@ import tensorflow as tf
 import pandas as pd
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import streamlit as st
 
 
-def create_model(load = True, save_model = True):
-
-    if load:
-        return load_model(r'C:\Users\zamec\Datamining2-project\model\model.h5')
+def create_model():
 
     model = tf.keras.Sequential()
 
@@ -28,35 +26,36 @@ def create_model(load = True, save_model = True):
 
     model.compile(loss = 'categorical_crossentropy',optimizer='adam',metrics = ['accuracy'])
     model.summary()
-
-    if save_model:
-        model.save(r'C:\Users\zamec\Datamining2-project\model\model.h5')
     
     return model
 
+@st.cache(suppress_st_warning=True)
+def train_new_model(file_input, num_epochs):
 
-def train_model(articles, model, num_epochs = 5):
+    X_train_padded, X_test_padded, y_train, y_test = preprocess_input_to_model(file_input)
 
-    science = np.load('sciencetech_articles.npy',allow_pickle='TRUE').item()
+    model = create_model()
+    my_bar = st.sidebar.progress(0)
+    percent = round(100 / num_epochs)
+    for num in range(num_epochs):
+        history = model.fit(X_train_padded, y_train, epochs=1, validation_data=(X_test_padded, y_test)) 
+        my_bar.progress((num + 1) * percent)
 
-    X_train, X_test, y_train, y_test = train_test_split(articles, labels, test_size=0.33, random_state=42)
-   
-    tokenizer = Tokenizer(num_words=vocab_size,oov_token=oov_tok)
-    tokenizer.fit_on_texts(X_train)
+    model.save(r'C:\Users\zamec\Datamining2-project\model\model_new.h5')
+    print(history.history)
+    acc = round(history.history['val_accuracy'][0],2) * 100
+    loss = round(history.history['val_loss'][0],2)
+    st.sidebar.write('The accuracy of a model on testing set is: ',acc)
+    st.sidebar.write('With the loss value: ',loss)
 
-    word_index = tokenizer.word_index
 
-    X_train = tokenizer.texts_to_sequences(X_train)
-    X_train_padded = np.array(pad_sequences(X_train, maxlen=max_length, padding=padding_type, truncating=trunc_type))
 
-    X_test = tokenizer.texts_to_sequences(X_test)
-    X_test_padded = np.array(pad_sequences(X_test, maxlen=max_length, padding=padding_type, truncating=trunc_type))
+def load_my_model(which_model:str):
 
-    y_train = tf.keras.utils.to_categorical(y_train, num_classes=3)
-    y_test = tf.keras.utils.to_categorical(y_test, num_classes=3)
-
-    history = model1.fit(X_train_padded, y_train, epochs=num_epochs, validation_data=(X_test_padded, y_test))
-
+    if which_model == 'pretrained':
+        return load_model(r'C:\Users\zamec\Datamining2-project\model\model.h5')
+    elif which_model == 'own':
+        return load_model(r'C:\Users\zamec\Datamining2-project\model\model_new.h5')  
 
 def crete_graph(x):
 

@@ -17,7 +17,7 @@ def preprocess_articles(articles) -> list:
 
   for key,value in articles.items():
     list_temp = []
-    list_temp.append(key)
+    list_temp.append(key.lower().strip().rstrip())
     for text in value:
       if len(text) > 0:
         list_temp.append(text.lower().strip().rstrip())
@@ -28,19 +28,24 @@ def preprocess_articles(articles) -> list:
   return articles_preprocess 
 
 
-def update_tokenizer(x:list):
+def create_tokenizer(x:list):
   
   tokenizer = Tokenizer(num_words=vocab_size,oov_token=oov_tok)
   tokenizer.fit_on_texts(x)
 
-  with open(r'C:\Users\zamec\Datamining2-project\model\tokenizer.pickle', 'wb') as handle:
+  with open(r'C:\Users\zamec\Datamining2-project\model\tokenizer_new.pickle', 'wb') as handle:
      pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def predict_preparation(text:list):
+def predict_preparation(text:list, own:bool = False):
 
-  with open(r'C:\Users\zamec\Datamining2-project\model\tokenizer.pickle', 'rb') as handle:
-    tokenizer = pickle.load(handle)
+  if not own:
+    with open(r'C:\Users\zamec\Datamining2-project\model\tokenizer.pickle', 'rb') as handle:
+      tokenizer = pickle.load(handle)
+  else:
+    with open(r'C:\Users\zamec\Datamining2-project\model\tokenizer_new.pickle', 'rb') as handle:
+      tokenizer = pickle.load(handle)
+
 
   sequences = tokenizer.texts_to_sequences(text)
   return pad_sequences(sequences, maxlen=max_length, padding=padding_type, truncating=trunc_type)

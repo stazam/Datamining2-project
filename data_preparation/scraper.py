@@ -3,6 +3,15 @@ import numpy as np
 import requests
 
 
+articles = {'sciencetech': r'C:\Users\zamec\Datamining2-project\data\sciencetech_articles.npy',
+            'sport': r'C:\Users\zamec\Datamining2-project\data\sport_articles.npy',
+            'travel': r'C:\Users\zamec\Datamining2-project\data\travel_articles.npy'}
+
+
+links_articles = {'sciencetech': r'C:\Users\zamec\Datamining2-project\data\sciencetech_links.npy',
+            'sport': r'C:\Users\zamec\Datamining2-project\data\sport_links.npy',
+            'travel': r'C:\Users\zamec\Datamining2-project\data\travel_links.npy'}
+
 def get_links(category:str, limit:int) -> list:
 
     url = 'https://www.dailymail.co.uk/' + category + '/index.html'
@@ -17,6 +26,14 @@ def get_links(category:str, limit:int) -> list:
             break
     
         links.append(prefix + url['href'])
+
+    try:
+        old_links = list(np.load(links_articles[category]))
+        links = list(set(links + old_links))
+        np.save(links_articles[category], links)
+    except:
+        print('Was a mistake')
+        np.save(links_articles[category], links)    
 
     return links
 
@@ -43,18 +60,14 @@ def get_text(links: list) -> dict:
     return dict_text
 
 
-articles = {'sciencetech': r'C:\Users\zamec\Datamining2-project\data\sciencetech_articles.npy',
-            'sport': r'C:\Users\zamec\Datamining2-project\data\sport_articles.npy',
-            'travel': r'C:\Users\zamec\Datamining2-project\data\travel_articles.npy'}
-
-
 def main():
 
     for cat, folder in articles.items():
-        links = get_links(cat,100)
+        links = get_links(cat,110)
+        num_articles = len(links)
         texts = get_text(links)
         np.save(folder, texts) 
-        print('Articles for %s category saved' % (cat))
+        print('%d articles for %s category saved' % (num_articles,cat))
 
 
 if __name__ == "__main__":

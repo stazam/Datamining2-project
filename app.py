@@ -4,23 +4,32 @@ import pandas as pd
 from os import path
 from PIL import Image
 from tensorflow.python.keras.backend import update
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from help_functions import *
 from data_preparation.model_prediction import *
 from data_preparation.data_cleaning import *
-from io import StringIO, BytesIO 
+from io import StringIO
 import plotly.express as px
 import plotly.graph_objects as go
+import time
 
 st.set_page_config(layout='wide')
 
-# image = Image.open(r'C:\Users\zamec\Datamining2-project\text_classification.png')
-# st.image(image, caption='Sunrise by the mountains')
+image = Image.open(r'C:\Users\zamec\Datamining2-project\text_classifier.png')
 
 col1, col2, col3 = st.columns([1.1,1,1])
 with col2:
     st.header('Text classification')
+
+st.markdown("")
+st.markdown("")    
+
+st.markdown("""<hr style="height:0.5px;width:1050px;border:none;color:#FF4B4B;background-color:#FF4B4B;margin-top:0px; margin-bottom:0px" /> """, unsafe_allow_html=True)
+col1, col2, col3 = st.columns([0.25,1,0.1])
+with col2:
+    st.image(image)
+st.markdown("""<hr style="height:0.5px;width:1050px;border:none;color:#FF4B4B;background-color:#FF4B4B;margin-top:0px; margin-bottom:0px" /> """, unsafe_allow_html=True)
 
 st.markdown("")
 st.markdown("")
@@ -65,7 +74,10 @@ if 'Barchart' in graphs:
 
 st.sidebar.markdown("")
 st.sidebar.markdown("")
-my_model = st.sidebar.checkbox('Train your own model', value=False) 
+my_model = st.sidebar.checkbox('Train your own model', value=False)
+# value = st.sidebar.checkbox('Info button')
+# if value: 
+#     st.sidebar.info('Add three .txt files with names: sport.txt, travel.txt, science.txt (in this order).')
 if my_model:
     file_input = st.sidebar.file_uploader("Add text files for training NN", type = ['.txt'],accept_multiple_files=True) 
     num_epochs = st.sidebar.select_slider( 'Number of epochs to train NN', options=list(range(100)), value = 3)

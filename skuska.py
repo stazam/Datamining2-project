@@ -5,6 +5,7 @@ import streamlit as st
 from io import StringIO
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
+import time
 
 #rozdelit na funkcie a potom pridat do model_prediciton
 num_epochs = 5
@@ -12,6 +13,12 @@ file_input = st.file_uploader("You can drag and grop your text files here (files
 # if len(file_input) == 2:
 #     for file in file_input:
 #         file.name
+
+value = st.checkbox('Info button')
+if value: 
+    st.info('This is a purely informational message')
+  
+
 if len(file_input) == 3: 
     
     labels = []

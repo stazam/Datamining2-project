@@ -6,6 +6,7 @@ from io import StringIO
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
 from sklearn.model_selection import train_test_split
+import pandas as pd
 
 max_length = 10000
 trunc_type='post'
@@ -13,6 +14,28 @@ padding_type='post'
 oov_tok = "<OOV>"
 training_size = 20000
 vocab_size = 10700
+
+def text_count(text):
+    d = dict()
+    for line in text.split():
+        print(line)
+        line = line.strip()
+        line = line.lower()
+        #line = line.translate(line.maketrans("", "", string.punctuation))
+    
+        words = line.split(" ")
+    
+        for word in words:
+            if word in d:
+                d[word] = d[word] + 1
+            else:
+                d[word] = 1
+    
+    for key in list(d.keys()):
+        print(key, ":", d[key])
+
+    return pd.DataFrame(list(d.items()), columns = ['word','count']).sort_values('count',ascending=False)
+
 
 def preprocess_articles(articles) -> list:
 

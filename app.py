@@ -1,22 +1,17 @@
 import streamlit as st
-import numpy as np
-import pandas as pd
-from os import path
 from PIL import Image
 from tensorflow.python.keras.backend import update
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-from help_functions import *
 from data_preparation.model_prediction import *
 from data_preparation.data_cleaning import *
 from io import StringIO
 import plotly.express as px
 import plotly.graph_objects as go
-import time
 
 st.set_page_config(layout='wide')
 
-image = Image.open(r'C:\Users\zamec\Datamining2-project\text_classifier.png')
+image = Image.open(r'C:\Users\zamec\Datamining2-project\data\text_classifier.png')
 
 col1, col2, col3 = st.columns([1.1,1,1])
 with col2:
@@ -25,11 +20,11 @@ with col2:
 st.markdown("")
 st.markdown("")    
 
-st.markdown("""<hr style="height:0.5px;width:1050px;border:none;color:#FF4B4B;background-color:#FF4B4B;margin-top:0px; margin-bottom:0px" /> """, unsafe_allow_html=True)
+st.markdown("""<hr style="height:2px;width:1050px;border:none;color:#31333F;background-color:#31333F;margin-top:0px; margin-bottom:0px" /> """, unsafe_allow_html=True)
 col1, col2, col3 = st.columns([0.25,1,0.1])
 with col2:
     st.image(image)
-st.markdown("""<hr style="height:0.5px;width:1050px;border:none;color:#FF4B4B;background-color:#FF4B4B;margin-top:0px; margin-bottom:0px" /> """, unsafe_allow_html=True)
+st.markdown("""<hr style="height:2px;width:1050px;border:none;color:#31333F;background-color:#31333F;margin-top:0px; margin-bottom:0px" /> """, unsafe_allow_html=True)
 
 st.markdown("")
 st.markdown("")

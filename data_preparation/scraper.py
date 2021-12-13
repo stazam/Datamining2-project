@@ -28,9 +28,13 @@ def get_links(category:str, limit:int) -> list:
         links.append(prefix + url['href'])
 
     try:
-        old_links = list(np.load(links_articles[category]))
-        links = list(set(links + old_links))
-        np.save(links_articles[category], links)
+        old_links = list(np.load(links_articles[category],allow_pickle='TRUE'))
+        all_links = list(set(links + old_links))
+        np.save(links_articles[category], all_links)
+        for link in old_links:
+            if link in links:
+                links.remove(link)
+
     except:
         print('Was a mistake')
         np.save(links_articles[category], links)    
@@ -65,10 +69,19 @@ def main():
     for cat, folder in articles.items():
         links = get_links(cat,110)
         num_articles = len(links)
-        texts = get_text(links)
-        np.save(folder, texts) 
-        print('%d articles for %s category saved' % (num_articles,cat))
+        if num_articles > 0:
+            try:
+                old_texts = np.load(folder, allow_pickle='TRUE').item()
+                texts = get_text(links)
+                texts.update(old_texts)
+                print('skuska')
+            except:
+                texts = get_text(links)
 
+            np.save(folder, texts) 
+            print('%d articles for %s category saved' % (num_articles,cat))
+        else:
+            print('No new article on the page for %s category' % (cat))
 
 if __name__ == "__main__":
     main()

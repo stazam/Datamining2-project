@@ -4,12 +4,13 @@ import matplotlib.pyplot as plt
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Embedding, Bidirectional
-from keras.layers import Convolution2D, MaxPooling2D,BatchNormalization,GlobalAveragePooling1D, Flatten, Dropout
+from keras.layers import Convolution2D, MaxPooling2D,BatchNormalization,GlobalAveragePooling1D, Flatten, Dropout, LSTMCell
 import tensorflow as tf
 import pandas as pd
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import streamlit as st
+import base64
 
 
 def create_model():
@@ -28,6 +29,7 @@ def create_model():
     model.summary()
     
     return model
+
 
 @st.cache(suppress_st_warning=True)
 def train_new_model(file_input, num_epochs):

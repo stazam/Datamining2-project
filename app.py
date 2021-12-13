@@ -75,9 +75,10 @@ my_model = st.sidebar.checkbox('Train your own model', value=False)
 #     st.sidebar.info('Add three .txt files with names: sport.txt, travel.txt, science.txt (in this order).')
 if my_model:
     file_input = st.sidebar.file_uploader("Add text files for training NN", type = ['.txt'],accept_multiple_files=True) 
-    num_epochs = st.sidebar.select_slider( 'Number of epochs to train NN', options=list(range(100)), value = 3)
+    file_input = chceck_input(file_input)
 
-    if len(file_input) == 3: 
+    num_epochs = st.sidebar.select_slider( 'Number of epochs to train NN', options=list(range(100)), value = 1)
+    if not file_input is None: 
         train_new_model(file_input, num_epochs)
         
 

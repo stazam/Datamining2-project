@@ -74,7 +74,6 @@ def main():
                 old_texts = np.load(folder, allow_pickle='TRUE').item()
                 texts = get_text(links)
                 texts.update(old_texts)
-                print('skuska')
             except:
                 texts = get_text(links)
 

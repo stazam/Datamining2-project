@@ -7,6 +7,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import streamlit as st
 
 max_length = 10000
 trunc_type='post'
@@ -108,3 +109,26 @@ def preprocess_input_to_model(file_input, num_epochs = 5):
     y_test = tf.keras.utils.to_categorical(y_test, num_classes=num_class)
 
     return X_train_padded, X_test_padded, y_train, y_test
+
+
+def chceck_input(file_input):
+
+    if not len(file_input) == 3:
+       return None
+        
+    parsed_object = [(x.name.split('.')[0],x.name.split('.')[1]) for x in file_input]
+
+    for name, type_file in parsed_object:
+        if name in ['science','sport','travel'] and type_file == 'txt':
+            continue
+        else:
+            st.sidebar.info('Add three .txt files with names: sport.txt, travel.txt, science.txt.')
+            return None
+            break   
+    else:
+        print('Everything is fine now!')
+        file_input_fin = [0,0,0]
+        for i,file in enumerate(file_input):
+            file_input_fin[['science','sport','travel'].index(parsed_object[i][0])] = file
+
+    return file_input_fin 

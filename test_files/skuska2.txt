@@ -1,2 +1,0 @@
-Toto je nazov: Toto je text daneho nazvu
-Dalsi nazov: text dalsieho nazvu

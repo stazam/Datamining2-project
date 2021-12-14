@@ -10,7 +10,6 @@ import pandas as pd
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import streamlit as st
-import base64
 
 
 def create_model():
@@ -71,6 +70,7 @@ def crete_graph(x):
     
     result = labels[x.index(max(x))]
     return fig1, result
+
 
 def get_result(x):
 

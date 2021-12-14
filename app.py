@@ -1,13 +1,13 @@
 import streamlit as st
 from PIL import Image
 from tensorflow.python.keras.backend import update
-from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from data_preparation.model_prediction import *
 from data_preparation.data_cleaning import *
 from io import StringIO
 import plotly.express as px
 import plotly.graph_objects as go
+from wordcloud import WordCloud
 
 st.set_page_config(layout='wide')
 
@@ -54,12 +54,12 @@ st.sidebar.markdown("")
 #multiselect choice of graphs
 graphs = st.sidebar.multiselect('Which graphs would you like to dispaly',options = ['WordCloud','Barchart'], default=None)        
 
-if 'WordCloud' in graphs:
+if 'WordCloud' in graphs and len(text) != 0:
     init_val_wc = round(len(text.split()) /2 )
     max_val_wc = len(text.split())
     num_words_cloud = st.sidebar.select_slider( 'Number of dispalyed words in word cloud', options=list(range(max_val_wc)), value = init_val_wc)
 
-if 'Barchart' in graphs:
+if 'Barchart' in graphs and len(text) != 0:
     df_bar = text_count(text)
 
     max_val_bar = df_bar.shape[0]
@@ -157,15 +157,9 @@ if len(text) != 0:
             wordcloud = WordCloud(max_words=num_words_cloud , background_color="white", width = 600, height= 300).generate(text)
             fig, ax = plt.subplots(figsize=(8, 7))
             plt.imshow(wordcloud)
-            plt.axis("off")
+            plt.axis("off")            
             st.pyplot(fig)
 
         with col3:
             st.markdown('')
 
-    
-
-    #     savedModel =  create_model(update = True)
-
-    #     sentence = predict_preparation([text])
-    #     prediction = savedModel.predict(sentence) 

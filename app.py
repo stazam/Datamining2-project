@@ -96,9 +96,12 @@ if len(text) != 0:
 
     colors = ['#00cc96','#636efa','#ef553b']
     df, result, ind = get_result(prediction)
+    print(result)
+    print(ind)
+    print(df)
 
     color = colors[ind]
-    st.markdown("<h2 style='text-align: center; color: #31333f;'>Your article has been predicted as <span style='color:" + color + "'>" + result + "</span> article </h2>", unsafe_allow_html=True) 
+    st.markdown("<h2 style='text-align: center; color: #31333f;'>Your article has been predicted as a <span style='text-decoration:underline'>" + result + "</span> article </h2>", unsafe_allow_html=True) 
     if stats:
         col1, col2, col3 = st.columns([1.1,0.1,1.2])
         with col1:
@@ -111,7 +114,7 @@ if len(text) != 0:
             st.markdown('')
         
         with col3:
-            fig1 = px.pie(df, values='Prediction', names='Category')  
+            fig1 = px.pie(df, values='Prediction', names='Category',color_discrete_map={'sport':'#00cc96','travel':'#636efa','science':'#ef553b'})  
             st.plotly_chart(fig1, use_container_width=True)  
 
 

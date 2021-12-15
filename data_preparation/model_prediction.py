@@ -14,15 +14,15 @@ import streamlit as st
 
 def create_model():
 
+
     model = tf.keras.Sequential()
 
     model.add(Embedding(vocab_size,240, input_length = max_length))
-    model.add(Bidirectional(keras.layers.LSTM(150, return_sequences=True)))
     model.add(Bidirectional(keras.layers.LSTM(64, return_sequences=True)))
     model.add(Bidirectional(keras.layers.LSTM(32, return_sequences=True)))
-    model.add(Flatten())
+    model.add(Flatten()),
+    Dropout(0.5),
     model.add(Dense(3,activation = 'softmax'))
-
 
     model.compile(loss = 'categorical_crossentropy',optimizer='adam',metrics = ['accuracy'])
     model.summary()
@@ -63,7 +63,7 @@ def crete_graph(x):
     x = x[0].tolist()
     #pie, ax = plt.subplots(figsize=[10,6])
     fig1 = plt.figure(figsize=(12,7))
-    labels = ['science','sport','travel']
+    labels = ['sport','travel','science']
     plt.pie(x, autopct="%.1f%%", explode=[0.05]*3, labels=labels, pctdistance=0.5, shadow=True)
     plt.title("Results", fontsize=20)
     plt.show()
@@ -76,7 +76,7 @@ def get_result(x):
 
     x = x[0].tolist()
     #pie, ax = plt.subplots(figsize=[10,6])
-    categories = ['science','sport','travel']
+    categories = ['sport','travel','science']
 
     ind = x.index(max(x))    
     result = categories[ind]

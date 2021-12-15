@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 import streamlit as st
 
-max_length = 10000
+max_length = 5000
 trunc_type='post'
 padding_type='post'
 oov_tok = "<OOV>"
@@ -119,7 +119,7 @@ def chceck_input(file_input):
     parsed_object = [(x.name.split('.')[0],x.name.split('.')[1]) for x in file_input]
 
     for name, type_file in parsed_object:
-        if name in ['science','sport','travel'] and type_file == 'txt':
+        if name in ['sport','travel','science'] and type_file == 'txt':
             continue
         else:
             st.sidebar.info('Add three .txt files with names: sport.txt, travel.txt, science.txt.')
@@ -129,6 +129,6 @@ def chceck_input(file_input):
         print('Everything is fine now!')
         file_input_fin = [0,0,0]
         for i,file in enumerate(file_input):
-            file_input_fin[['science','sport','travel'].index(parsed_object[i][0])] = file
+            file_input_fin[['sport','travel','science'].index(parsed_object[i][0])] = file
 
     return file_input_fin 
